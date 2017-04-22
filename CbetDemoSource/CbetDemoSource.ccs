@@ -1,0 +1,49 @@
+<Solution>
+  <PropertyGroup Name="CbetDemoSource" Version="3.10.0.0" Type="CocosStudio" />
+  <SolutionFolder>
+    <Group ctype="ResourceGroup">
+      <RootFolder Name=".">
+        <Folder Name="commonSource">
+          <Image Name="bg_home_10000.png" />
+          <Image Name="btn_start_big.png" />
+          <Image Name="btn_start_big_pressed.png" />
+        </Folder>
+        <Folder Name="HomeScene">
+          <Folder Name="TitleLayer">
+            <Project Name="HomeTitleLayer.csd" Type="Layer" />
+            <Image Name="img_gold.png" />
+            <Image Name="img_home_title_bar_bg.png" />
+            <Image Name="img_photo_alph.png" />
+            <Image Name="img_photo_default2.png" />
+            <Image Name="img_race_detail_static_bg.png" />
+          </Folder>
+          <Image Name="btn_activity.png" />
+          <Image Name="btn_activity_pressed.png" />
+          <Image Name="btn_job.png" />
+          <Image Name="btn_job_pressed.png" />
+          <Image Name="btn_message.png" />
+          <Image Name="btn_message_pressed.png" />
+          <Image Name="btn_setting.png" />
+          <Image Name="btn_setting_pressed.png" />
+          <Image Name="btn_shop.png" />
+          <Image Name="btn_shop_pressed.png" />
+          <Project Name="HomeScene.csd" Type="Scene" />
+          <Image Name="img_home_bottom_section_bg.png" />
+          <Image Name="img_home_race_entrance_mid_championships.png" />
+          <Image Name="img_home_race_entrance_mid_crazy.png" />
+          <Image Name="img_home_race_entrance_mid_tcm.png" />
+        </Folder>
+        <Folder Name="LoginScene">
+          <Image Name="btn_login_500.png" />
+          <Image Name="btn_login_500_pressed.png" />
+          <Image Name="btn_login_qq.png" />
+          <Image Name="btn_login_qq_pressed.png" />
+          <Image Name="btn_login_wechat.png" />
+          <Image Name="btn_login_wechat_pressed.png" />
+          <Image Name="img_translucent.png" />
+          <Project Name="LoginScene.csd" Type="Scene" />
+        </Folder>
+      </RootFolder>
+    </Group>
+  </SolutionFolder>
+</Solution>
