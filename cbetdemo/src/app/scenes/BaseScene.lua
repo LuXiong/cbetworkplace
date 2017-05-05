@@ -10,7 +10,8 @@ local BasicParamModel = require("app.net.BasicParamModel")
 function BaseScene:onCreate()
 	BaseScene.f_pageOpenTime = checknumber(socket.gettime())
 	-- str_willEnterSceneName = display.getRunningScene().__cname
-	
+	print("BaseScene----->onCreate()")
+	this = self
 	local function onNodeEvent(event)
 		if event == "enter" then
 			--场景进入时触发

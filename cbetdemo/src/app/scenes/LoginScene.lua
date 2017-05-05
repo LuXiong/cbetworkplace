@@ -2,64 +2,85 @@
 -- Author: xlook
 -- Date: 2017-04-19 11:26:47
 --
-local BaseScene = require("app.scenes.BaseScene")
 local LoginScene = class("LoginScene", BaseScene)
-local HttpClient = require("app.net.HttpClient")
-local BasicParamModel = require("app.net.BasicParamModel")
+
+local listener_guest_login = function(sender,event)
+    if event == ccui.TouchEventType.ended then
+        -- app 返回 {result = "100",id = "--jpush_registration_id--"}
+	    luaAppBridge({type=Res.lua_action_jpush_rgid},function (event)
+	        if event.result and event.result == "100" and event.id then
+	            HttpClient.new():onSuccessCallBack(function (dataTable)
+	                -- 保存用户信息
+	                if dataTable.ck and dataTable.uid then
+	                    dataTable.userType = Res.USER_GUEST
+	                    this:saveLoginInfo(dataTable)
+	                else
+	                    this:loginFailed()
+	                    this:showLoginButtons()
+	                end
+	            end)
+	            :onErrorCallBack(function (code,msg)
+	                print("code: "..code.." msg: "..msg)
+	            end)
+	            -- :showLoadingView(self)
+	            :doPost(Res.interface.login_guest, BasicParamModel.new({registration_id = event.id}))
+	            :start()
+
+	        else
+	            local strMsg = event.msg or "jpush rgid 获取失败"
+	            showToast(strMsg)
+	        end
+	    end)
+	end
+end
 
 function LoginScene:onCreate()
-    local scene = cc.CSLoader:createNode("LoginScene/LoginScene.csb")
-    local btn_login = scene:getChildByName("Button_1")
+	LoginScene.super.onCreate(self)
+	self:bindView()
+	self:bindEvents()
+	local msg = cc.Test:helloMsg()
+ 	print("luaclibtest:"..msg)
+	-- print("luaclibtest:"..mylib.mysin(3.14 / 2)) 
+end
 
-    -- local ChildrenList = scene:getChildByName("FileNode_3"):getChildren()
-    -- for _,child in pairs(ChildrenList) do
-    --     self:generateRealHeight(child,display.height,1334)
-    -- end
+function LoginScene:bindView()
+	local scene = cc.CSLoader:createNode("LoginScene/LoginScene.csb")
+    self.btn_login = scene:getChildByName("btn_guest")
     self:addChild(scene)
+end
 
-    btn_login:addTouchEventListener(function(sender,event)
-        if event == ccui.TouchEventType.ended then
-            --[[
-		      app 返回 {result = "100",id = "--jpush_registration_id--"}
-		    ]]--
-		    luaAppBridge({type=Res.lua_action_jpush_rgid},function (event)
-		        --authToken调用服务端完成QQ登录
-		         -- print("get jpush registerid:",event.result,event.id)
-		        dump(event, "event", 6)
-		        dump(device, "device", 6)
-		        if event.result and event.result == "100" and event.id then
-		             -- 网络请求 以及 回调
-		            HttpClient.new():onSuccessCallBack(function (dataTable)
-		                -- 保存数据
-		                dump(dataTable, "HttpClient", 6)
-			                -- -- 保存用户信息
-			                -- if dataTable.ck and dataTable.uid then
-			                --     dataTable.userType = Res.USER_GUEST
-			                --     self:saveLoginInfo(dataTable)
-			                -- else
-			                --     self:loginFailed()
-			                --     self:showLoginButtons()
-			                -- end
+function LoginScene:bindEvents()
+	-- self.btn_login:addTouchEventListener(listener_guest_login)
+end
 
-		            end)
-		            :onErrorCallBack(function (code,msg)
-		                -- 网络请求失败回调函数
-		                print("code: "..code.." msg: "..msg)
-		                -- self:loginFailed(msg)
-		                -- self:showLoginButtons()
-		            end)
-		            :showLoadingView(self)
-		            :doPost(Res.interface.login_guest, BasicParamModel.new({registration_id = event.id}))
-		            :start()
-
-		        else
-		            local strMsg = event.msg or "jpush rgid 获取失败"
-		            showToast(strMsg)
-		        end
-		    end)
-		end
-	end)    
-
+-- 登录成功了，保存登录信息。并获取用户信息
+function LoginScene:saveLoginInfo(loginInfo)
+    -- 保存用户信息
+    if loginInfo.ck and loginInfo.uid and loginInfo.userType then
+        local dm_userInfo = {
+            ck = loginInfo.ck,
+            username = "",
+            uid = loginInfo.uid,
+            gold = "0",
+            diamond = "0",
+            loginTime = os.time()
+        }
+        --保存用户类型
+        gameData.loginType = loginInfo.userType
+        gameData.userInfo = dm_userInfo
+        GameState.save(gameData)
+        -- 获取账户信息
+        Cbet_UserInfo:getInstance():getUserInfo(self)
+        -- 极光推送
+        -- luaAppBridge({type=Res.lua_action_jpush_alias,uid = loginInfo.uid},function (event)
+        --      -- print("set jpush alias:",event.result)
+        -- end)
+        -- luaAppBridge({type=Res.lua_action_jpush_tags},function (event)
+        --      -- print("set jpush tags:",event.result)
+        -- end)
+    else
+        self:showLoginButtons()
+    end
 end
 
 return LoginScene

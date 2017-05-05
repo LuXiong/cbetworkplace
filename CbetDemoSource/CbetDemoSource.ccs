@@ -7,6 +7,7 @@
           <Image Name="bg_home_10000.png" />
           <Image Name="btn_start_big.png" />
           <Image Name="btn_start_big_pressed.png" />
+          <Image Name="img_translucent.png" />
         </Folder>
         <Folder Name="HomeScene">
           <Folder Name="TitleLayer">
@@ -40,7 +41,6 @@
           <Image Name="btn_login_qq_pressed.png" />
           <Image Name="btn_login_wechat.png" />
           <Image Name="btn_login_wechat_pressed.png" />
-          <Image Name="img_translucent.png" />
           <Project Name="LoginScene.csd" Type="Scene" />
         </Folder>
       </RootFolder>
